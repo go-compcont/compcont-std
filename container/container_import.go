@@ -20,7 +20,7 @@ type ContainerImportConfig struct {
 
 var importFactory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[ContainerImportConfig, compcont.IComponentContainer]{
 	TypeID: ContainerImportType,
-	CreateInstanceFunc: func(ctx compcont.Context, config ContainerImportConfig) (instance compcont.IComponentContainer, err error) {
+	CreateInstanceFunc: func(ctx compcont.BuildContext, config ContainerImportConfig) (instance compcont.IComponentContainer, err error) {
 		instance = compcont.NewComponentContainer(
 			compcont.WithFactoryRegistry(ctx.Container.FactoryRegistry()),
 			compcont.WithParentContainer(ctx.Container),

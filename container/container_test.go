@@ -13,7 +13,7 @@ import (
 
 var testComp compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[string, any]{
 	TypeID: "echo",
-	CreateInstanceFunc: func(ctx compcont.Context, config string) (instance any, err error) {
+	CreateInstanceFunc: func(ctx compcont.BuildContext, config string) (instance any, err error) {
 		instance = config
 		slog.Info(
 			"echo component",
@@ -28,7 +28,7 @@ var testComp compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[
 
 var outputIns compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[compcont.ComponentConfig, any]{
 	TypeID: "output",
-	CreateInstanceFunc: func(ctx compcont.Context, config compcont.ComponentConfig) (instance any, err error) {
+	CreateInstanceFunc: func(ctx compcont.BuildContext, config compcont.ComponentConfig) (instance any, err error) {
 		s, err := compcont.LoadAnonymousComponent[any](ctx.Container, config)
 		if err != nil {
 			return

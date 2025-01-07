@@ -9,7 +9,7 @@ const TypeID compcont.ComponentTypeID = "std.reloading"
 
 var factory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[Config, IReloading]{
 	TypeID: TypeID,
-	CreateInstanceFunc: func(ctx compcont.Context, cfg Config) (instance IReloading, err error) {
+	CreateInstanceFunc: func(ctx compcont.BuildContext, cfg Config) (instance IReloading, err error) {
 		var restyClient *resty.Client
 		if cfg.Resty != nil {
 			restyClientComp, err1 := cfg.Resty.LoadComponent(ctx.Container)
