@@ -3,7 +3,7 @@ module github.com/go-compcont/compcont-std
 go 1.23.1
 
 require (
-	github.com/go-compcont/compcont-core v0.0.0
+	github.com/go-compcont/compcont-core v0.0.1
 	github.com/go-resty/resty/v2 v2.15.3
 	github.com/stretchr/testify v1.9.0
 	go.uber.org/zap v1.27.0
@@ -18,5 +18,3 @@ require (
 	go.uber.org/multierr v1.10.0 // indirect
 	golang.org/x/net v0.27.0 // indirect
 )
-
-replace github.com/go-compcont/compcont/compcont v0.0.0 => ../compcont
