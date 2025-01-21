@@ -8,17 +8,21 @@ import (
 )
 
 var (
-	defaultLogger **zap.Logger
+	defaultLogger *zap.Logger
 )
 
 type ctxKeyLogger struct{}
 
-func WithLogger(req *http.Request, logger *zap.Logger) {
-	ctx := req.Context()
+func WithRequest(req *http.Request, logger *zap.Logger) {
+	*req = *req.WithContext(WithContext(req.Context(), logger))
+}
+
+func WithContext(ctx context.Context, logger *zap.Logger) context.Context {
+	// ctx中已经有一个logger了，不再添加新logger
 	if _, ok := ctx.Value(ctxKeyLogger{}).(*zap.Logger); ok {
-		return
+		return ctx
 	}
-	*req = *req.WithContext(context.WithValue(ctx, ctxKeyLogger{}, logger))
+	return context.WithValue(ctx, ctxKeyLogger{}, logger)
 }
 
 func FromContext(ctx context.Context) *zap.Logger {
@@ -30,13 +34,12 @@ func FromContext(ctx context.Context) *zap.Logger {
 }
 
 func SetDefault(l *zap.Logger) {
-	defaultLogger = &l
+	defaultLogger = l
 }
 
 func GetDefault() *zap.Logger {
 	if defaultLogger == nil {
-		return zap.NewNop()
-	} else {
-		return *defaultLogger
+		defaultLogger, _ = zap.NewDevelopmentConfig().Build()
 	}
+	return defaultLogger
 }

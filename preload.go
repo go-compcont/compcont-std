@@ -1,6 +1,7 @@
 package compcontstd
 
 import (
+	_ "github.com/go-compcont/compcont-std/block"
 	_ "github.com/go-compcont/compcont-std/compcont-zap"
 	_ "github.com/go-compcont/compcont-std/container"
 	_ "github.com/go-compcont/compcont-std/debug"

@@ -2,13 +2,15 @@ package debug
 
 import (
 	"github.com/go-compcont/compcont-core"
+	compcontzap "github.com/go-compcont/compcont-std/compcont-zap"
 	"go.uber.org/zap"
 )
 
 const TypeID compcont.ComponentTypeID = "std.debug"
 
 type Config struct {
-	Logger *compcont.TypedComponentConfig[any, *zap.Logger]
+	Logger  *compcont.TypedComponentConfig[any, *zap.Logger] `ccf:"logger"`
+	Message string                                           `ccf:"message"`
 }
 
 var factory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[Config, any]{
@@ -23,10 +25,7 @@ var factory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[C
 			}
 			logger = loggerComp.Instance
 		} else {
-			logger, err = zap.NewDevelopmentConfig().Build()
-			if err != nil {
-				return
-			}
+			logger = compcontzap.GetDefault()
 		}
 
 		logger.Debug(
@@ -35,6 +34,7 @@ var factory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[C
 			zap.Stringer("type", ctx.Config.Type),
 			zap.Stringers("deps", ctx.Config.Deps),
 			zap.Stringers("absolute_path", ctx.GetAbsolutePath()),
+			zap.String("message", cfg.Message),
 		)
 		return
 	},

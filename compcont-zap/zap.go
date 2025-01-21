@@ -44,6 +44,7 @@ func (c *ExtraConfig) MergeTo(input zap.Config) (output zap.Config, err error) {
 }
 
 type Config struct {
+	Default     bool        `ccf:"default"`
 	BaseConfig  string      `ccf:"base_config"` // "","development","production"
 	ExtraConfig ExtraConfig `ccf:"extra_config"`
 }
@@ -66,6 +67,9 @@ func New(cfg Config) (c *zap.Logger, err error) {
 	c, err = finalCfg.Build()
 	if err != nil {
 		return
+	}
+	if cfg.Default {
+		SetDefault(c)
 	}
 	return
 }
