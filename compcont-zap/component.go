@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const TypeID compcont.ComponentTypeID = "std.logger-zap"
+const TypeID compcont.ComponentTypeID = "std.logger.zap"
 
 var factory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[Config, *zap.Logger]{
 	TypeID: TypeID,
