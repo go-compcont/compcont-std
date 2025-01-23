@@ -18,10 +18,6 @@ func WithRequest(req *http.Request, logger *zap.Logger) {
 }
 
 func WithContext(ctx context.Context, logger *zap.Logger) context.Context {
-	// ctx中已经有一个logger了，不再添加新logger
-	if _, ok := ctx.Value(ctxKeyLogger{}).(*zap.Logger); ok {
-		return ctx
-	}
 	return context.WithValue(ctx, ctxKeyLogger{}, logger)
 }
 
