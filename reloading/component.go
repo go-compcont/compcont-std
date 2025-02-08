@@ -12,12 +12,7 @@ var factory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[C
 	CreateInstanceFunc: func(ctx compcont.BuildContext, cfg Config) (instance IReloading, err error) {
 		var restyClient *resty.Client
 		if cfg.Resty != nil {
-			restyClientComp, err1 := cfg.Resty.LoadComponent(ctx.Container)
-			if err1 != nil {
-				err = err1
-				return
-			}
-			restyClient = restyClientComp.Instance
+			restyClient = cfg.Resty.MustLoadComponent(ctx.Container).Instance
 		}
 		instance = NewReloading(cfg, restyClient)
 		return

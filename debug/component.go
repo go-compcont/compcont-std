@@ -20,12 +20,7 @@ var factory compcont.IComponentFactory = &compcont.TypedSimpleComponentFactory[C
 	CreateInstanceFunc: func(ctx compcont.BuildContext, cfg Config) (instance any, err error) {
 		var logger *zap.Logger
 		if cfg.Logger != nil {
-			loggerComp, err1 := cfg.Logger.LoadComponent(ctx.Container)
-			if err1 != nil {
-				err = err1
-				return
-			}
-			logger = loggerComp.Instance
+			logger = cfg.Logger.MustLoadComponent(ctx.Container).Instance
 		} else {
 			logger = compcontzap.GetDefault()
 		}

@@ -153,12 +153,7 @@ type ReloadingConfigConfig[T any] struct {
 func (r *ReloadingConfigConfig[T]) Build(cc compcont.IComponentContainer) (rc IReloadingConfig[T], err error) {
 	var reloading IReloading
 	if r.Reloading != nil {
-		reloadingComp, err1 := r.Reloading.LoadComponent(cc)
-		if err1 != nil {
-			err = err1
-			return
-		}
-		reloading = reloadingComp.Instance
+		reloading = r.Reloading.MustLoadComponent(cc).Instance
 	}
 	rc = NewReloadingConfig(ReloadingConfigOption[T]{
 		Reloading:    reloading,
