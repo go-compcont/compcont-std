@@ -1,20 +1,29 @@
 package compcontzap
 
 import (
+	"fmt"
 	"net/url"
 	"strconv"
 
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
+type TimeEncoder string
+
+const (
+	TimeEncoderRFC3339 = "RFC3339Nano"
+)
+
 type ExtraConfig struct {
-	Level             *string  `ccf:"level"`
-	DisableCaller     *bool    `ccf:"disable_caller"`
-	DisableStacktrace *bool    `ccf:"disable_stacktrace"`
-	Encoding          *string  `ccf:"encoding"`
-	OutputPaths       []string `ccf:"output_paths"`
-	ErrorOutputPaths  []string `ccf:"error_output_paths"`
+	Level             *string     `ccf:"level"`
+	DisableCaller     *bool       `ccf:"disable_caller"`
+	DisableStacktrace *bool       `ccf:"disable_stacktrace"`
+	Encoding          *string     `ccf:"encoding"`
+	OutputPaths       []string    `ccf:"output_paths"`
+	ErrorOutputPaths  []string    `ccf:"error_output_paths"`
+	TimeEncoder       TimeEncoder `ccf:"time_encoder"`
 }
 
 func (c *ExtraConfig) MergeTo(input zap.Config) (output zap.Config, err error) {
@@ -39,6 +48,15 @@ func (c *ExtraConfig) MergeTo(input zap.Config) (output zap.Config, err error) {
 	}
 	if len(c.ErrorOutputPaths) > 0 {
 		output.ErrorOutputPaths = c.ErrorOutputPaths
+	}
+
+	switch c.TimeEncoder {
+	case "":
+	case TimeEncoderRFC3339:
+		output.EncoderConfig.EncodeTime = zapcore.RFC3339NanoTimeEncoder
+	default:
+		err = fmt.Errorf("unsupported args: %s", c.TimeEncoder)
+		return
 	}
 	return
 }
